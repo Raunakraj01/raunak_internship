@@ -1,13 +1,17 @@
 """
 Task-4: Text Generation using GPT-2
+why gpt we are using: It’s pretrained on huge amounts of data, so we don’t need to train from scratch.
 This script takes a user prompt and generates text using the GPT-2 model.
+why using transformers Lib?, it is python library used by hugging face it gives ready-to-use tools to work with like, NLP,Text generation,translation many more!
+this lib provides the pretrained model like Gpt-2,BERT,T5
 """
 
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer #now GPT2LMHeadModel why this lib ?,LMH stands for Language Modeling Head, it means the model is used to predict the next word/token
+# This is the tool that converts your input text into tokens (numbers) that GPT-2 understands., Also used to decode model output back into readable text.
+import torch #why importing this ?, Hugging Face’s transformers library is built on top of PyTorch, The model runs on PyTorch (like GPT2LMHeadModel, also tokenizer input must be in the form of Pytorch tensor
 
 # Load pre-trained GPT2 model and tokenizer
-model_name = "gpt2"  # You can also use "distilgpt2" for a smaller version
+model_name = "gpt2" 
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 model = GPT2LMHeadModel.from_pretrained(model_name)
 
