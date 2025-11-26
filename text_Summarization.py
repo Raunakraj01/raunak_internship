@@ -1,40 +1,100 @@
+import tkinter as tk
+from tkinter import messagebox
 import nltk
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Download the punkt tokenizer if not already downloaded
+# Download punkt (only once)
 nltk.download('punkt')
-nltk.download('punkt_tab') # Download the 'punkt_tab' resource
 
+
+# -------------------- SUMMARIZER FUNCTION --------------------
 def summarize(text, num_sentences=2):
-    # Step 1: Split text into sentences
     sentences = nltk.sent_tokenize(text)
 
-    # Step 2: Convert sentences to vectors
+    if len(sentences) == 0:
+        return "No sentences found in the input."
+
+    if num_sentences > len(sentences):
+        num_sentences = len(sentences)
+
+    # Convert sentences to vectors
     vectorizer = CountVectorizer().fit_transform(sentences)
     vectors = vectorizer.toarray()
 
-    # Step 3: Calculate similarity matrix
+    # Similarity
     sim_matrix = cosine_similarity(vectors)
 
-    # Step 4: Score sentences based on similarity
+    # Score sentences
     scores = sim_matrix.sum(axis=1)
 
-    # Step 5: Pick top ranked sentences
-    ranked_sentences = [sentences[i] for i in scores.argsort()[-num_sentences:][::-1]]
+    # Top sentences
+    ranked_sentences = [
+        sentences[i] for i in scores.argsort()[-num_sentences:][::-1]
+    ]
 
-    # Step 6: Join and return summary
     return " ".join(ranked_sentences)
 
-# === Test Example ===
-input_text = """
-Artificial Intelligence is a branch of computer science that focuses on building smart machines.
-It is widely used in healthcare, finance, education, and many other sectors.
-AI helps reduce human effort and error.
-However, it also brings concerns about privacy and job loss.
-Researchers are working on making AI more ethical and explainable.
-"""
 
-summary = summarize(input_text, num_sentences=2)
-print("Summary:\n", summary)
+# -------------------- GUI FUNCTION --------------------
+def generate_summary():
+    text = input_box.get("1.0", tk.END).strip()
+    num = num_sent_box.get().strip()
+
+    if text == "":
+        messagebox.showwarning("No Text", "Please enter some text to summarize.")
+        return
+
+    if not num.isdigit():
+        messagebox.showwarning("Invalid Input", "Number of sentences must be an integer.")
+        return
+
+    num = int(num)
+
+    summary = summarize(text, num)
+
+    output_box.delete("1.0", tk.END)
+    output_box.insert(tk.END, summary)
+
+
+# -------------------- GUI SETUP --------------------
+root = tk.Tk()
+root.title("Text Summarizer")
+root.geometry("750x550")
+root.resizable(False, False)
+
+title = tk.Label(root, text="Text Summarizer", font=("Arial", 18, "bold"))
+title.pack(pady=10)
+
+# Input Label
+input_label = tk.Label(root, text="Enter your text:", font=("Arial", 12))
+input_label.pack()
+
+# Input Text Box
+input_box = tk.Text(root, height=10, width=90, font=("Arial", 10))
+input_box.pack(pady=5)
+
+# Number of Sentences Label + Entry
+num_frame = tk.Frame(root)
+num_frame.pack()
+
+num_label = tk.Label(num_frame, text="Summary Sentence Count:", font=("Arial", 12))
+num_label.pack(side=tk.LEFT)
+
+num_sent_box = tk.Entry(num_frame, width=5, font=("Arial", 12))
+num_sent_box.pack(side=tk.LEFT, padx=5)
+
+# Summarize Button
+summ_btn = tk.Button(root, text="Generate Summary", font=("Arial", 12), command=generate_summary)
+summ_btn.pack(pady=10)
+
+# Output Label
+output_label = tk.Label(root, text="Summary Output:", font=("Arial", 12))
+output_label.pack()
+
+# Output Box
+output_box = tk.Text(root, height=10, width=90, font=("Arial", 10))
+output_box.pack(pady=5)
+
+root.mainloop()
