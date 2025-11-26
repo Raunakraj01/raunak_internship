@@ -5,11 +5,11 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Download punkt (only once)
+
 nltk.download('punkt')
 
 
-# -------------------- SUMMARIZER FUNCTION --------------------
+
 def summarize(text, num_sentences=2):
     sentences = nltk.sent_tokenize(text)
 
@@ -19,7 +19,7 @@ def summarize(text, num_sentences=2):
     if num_sentences > len(sentences):
         num_sentences = len(sentences)
 
-    # Convert sentences to vectors
+    
     vectorizer = CountVectorizer().fit_transform(sentences)
     vectors = vectorizer.toarray()
 
@@ -37,7 +37,7 @@ def summarize(text, num_sentences=2):
     return " ".join(ranked_sentences)
 
 
-# -------------------- GUI FUNCTION --------------------
+
 def generate_summary():
     text = input_box.get("1.0", tk.END).strip()
     num = num_sent_box.get().strip()
@@ -58,7 +58,7 @@ def generate_summary():
     output_box.insert(tk.END, summary)
 
 
-# -------------------- GUI SETUP --------------------
+
 root = tk.Tk()
 root.title("Text Summarizer")
 root.geometry("750x550")

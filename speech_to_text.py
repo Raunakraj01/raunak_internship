@@ -2,15 +2,10 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import speech_recognition as sr
 
-# ---------------------------------------------------
-# GLOBAL VARIABLE FOR AUDIO PATH
-# ---------------------------------------------------
 audio_path = ""
 
 
-# ---------------------------------------------------
-# SELECT AUDIO FILE
-# ---------------------------------------------------
+
 def select_file():
     global audio_path
     audio_path = filedialog.askopenfilename(
@@ -24,9 +19,7 @@ def select_file():
         file_label.config(text="No file selected")
 
 
-# ---------------------------------------------------
-# TRANSCRIBE AUDIO
-# ---------------------------------------------------
+
 def transcribe_audio():
     global audio_path
 
@@ -57,9 +50,7 @@ def transcribe_audio():
         messagebox.showerror("Error", str(e))
 
 
-# ---------------------------------------------------
-# TKINTER WINDOW SETUP
-# ---------------------------------------------------
+
 root = tk.Tk()
 root.title("Speech Recognition GUI")
 root.geometry("650x450")
@@ -80,7 +71,5 @@ transcribe_btn.pack(pady=10)
 output_text = tk.Text(root, height=12, width=75, font=("Arial", 10))
 output_text.pack(pady=10)
 
-# ---------------------------------------------------
-# ALWAYS REQUIRED TO OPEN THE WINDOW
-# ---------------------------------------------------
+
 root.mainloop()
